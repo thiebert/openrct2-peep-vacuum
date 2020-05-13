@@ -1,6 +1,5 @@
-// Sample script that adds functions for manipulating peeps
+//Vacuums up peeps in an area
 
-// #5827: change guest's clothes colours 
 var downCoord;
 var currentCoord;
 
@@ -21,13 +20,11 @@ function selectTheMap() {
   };
 }
 
-function removePeeps(x, y) {
-  for (var i = 0; i < map.numEntities; i++) {
-    var entity = map.getEntity(i);
-    if (entity && entity.type === 'peep') {
-      if (entity.x == x && entity.y == y) {
-        entity.remove();
-      }
+function removePeeps(peeps, left, right, top, bottom) {
+  for (var i = 0; i < peeps.length; i++) {
+    var entity = peeps[i];
+    if (entity.x > left && entity.x < right && entity.y > top && entity.y < bottom) {
+      entity.remove();
     }
   }
 }
@@ -37,10 +34,11 @@ function removePeepsOnSelection() {
   var right = Math.max(downCoord.x, currentCoord.x);
   var top = Math.min(downCoord.y, currentCoord.y);
   var bottom = Math.max(downCoord.y, currentCoord.y);
+  var peeps = map.getAllEntities("peep")
+
+  removePeeps(peeps, left, right, top, bottom);
   for (var x = left; x <= right; x += 32) {
-    for (var y = top; y <= bottom; y += 32) {
-      removePeeps(x, y);
-    }
+    for (var y = top; y <= bottom; y += 32) {}
   }
 }
 
@@ -133,9 +131,9 @@ var main = function () {
 };
 
 registerPlugin({
-  name: 'Peep Tools',
+  name: 'Peep Vacuum',
   version: '1.0',
-  authors: ['OpenRCT2'],
+  authors: ['thiebert'],
   type: 'remote',
   main: main
 });
